@@ -1,7 +1,7 @@
 // Wait for the DOM to finish loading before running the game
 // Get the button elements and add event listeners to them
 
-document.addEventListener("DOMContentLoaded", function (){
+document.addEventListener("DOMContentLoaded", function () {
     let buttons = document.getElementsByTagName('button');
 
     for (let button of buttons) {
@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function (){
                 checkAnswer();
             } else {
                 let gameType = this.getAttribute('data-type');
-                runGame('gameType');
+                runGame(gameType);
             }
         });
 
@@ -28,10 +28,13 @@ function runGame(gameType) {
     let numOne = Math.floor(Math.random() * 25) + 1;
     let numTwo = Math.floor(Math.random() * 25) + 1;
 
-    if(gameType === 'addition'){
-        displayAdditionAnswer(numOne,numTwo);
-    }
-    else{
+    if (gameType === 'addition') {
+        displayAdditionAnswer(numOne, numTwo);
+    } else if (gameType === 'multiply') {
+        displayMultiplyAnswer(numOne, numTwo);
+    } else if (gameType === 'subtract') {
+        displaySubtractAnswer(numOne, numTwo);
+    } else {
         alert(`unknown game type: ${gameType}`)
         throw `unknown game type: ${gameType} Aborting!`
     }
@@ -46,16 +49,16 @@ function checkAnswer() {
     let calculatedAnswer = calculateCorrectAnswer();
     let isCorrect = userAnswer === calculatedAnswer[0];
 
-    if(isCorrect){
+    if (isCorrect) {
         alert('Hey you got it right!');
         incrementScore();
-    }else{
+    } else {
         alert(`Awww. You answered ${userAnswer}. The correct answer was ${calculatedAnswer[0]}!`);
         incrementWrongAnswer();
     }
     runGame(calculatedAnswer[1]);
 
-    
+
 }
 
 /**
@@ -67,9 +70,13 @@ function calculateCorrectAnswer() {
     let operand2 = parseInt(document.getElementById('operand2').innerText);
     let operator = document.getElementById('operator').innerText
 
-    if (operator === '+'){
+    if (operator === '+') {
         return [operand1 + operand2, "addition"];
-    }else{
+    } else if (operator === 'x') {
+        return [operand1 * operand2, "multiply"];
+    } else if (operator === '-') {
+        return [operand1 - operand2, "subtract"];
+    } else {
         alert(`Unimplemented operator ${operator}`);
         throw `Unimplemented operator ${operator}. Aborting!`;
     }
@@ -95,12 +102,16 @@ function displayAdditionAnswer(operand1, operand2) {
     document.getElementById('operator').textContent = "+";
 }
 
-function displaySubtractAnswer() {
-
+function displaySubtractAnswer(operand1, operand2) {
+    document.getElementById('operand1').textContent = operand1 > operand2 ? operand1 : operand2;
+    document.getElementById('operand2').textContent = operand1 > operand2 ? operand2 : operand1;
+    document.getElementById('operator').textContent = "-";
 }
 
-function displayMultiplyAnswer() {
-
+function displayMultiplyAnswer(operand1, operand2) {
+    document.getElementById('operand1').textContent = operand1;
+    document.getElementById('operand2').textContent = operand2;
+    document.getElementById('operator').textContent = "x";
 }
 
 function displayDivideAnswer() {
